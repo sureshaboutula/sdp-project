@@ -1,0 +1,39 @@
+resources:
+  pipelines:
+    sdp_ecommerce_pipeline:
+      name: sdp-project-${var.env}
+      serverless: true
+      catalog: sdp_catalog_${var.env}
+      target: ${var.schema_gold}
+      libraries:
+        - notebook:
+            path: ../notebooks/01_bronze_ingestion.py
+        - notebook:
+            path: ../notebooks/02_silver_cleansing.py
+        - notebook:
+            path: ../notebooks/03_gold_aggregations.py
+        - notebook:
+            path: ../notebooks/04_dq_quarantine.py
+      configuration:
+        "env": "${var.env}"
+        "schema_bronze": "${var.schema_bronze}"
+        "schema_silver": "${var.schema_silver}"
+        "schema_gold": "${var.schema_gold}"
+        "schema_quarantine": "${var.schema_quarantine}"
+  jobs:
+    sdp_ecommerce_job:
+      name: sdp-project-${var.env}-job
+      tasks:
+        - task_key: setup
+          notebook_task:
+            notebook_path: ../notebooks/00_setup.py
+            base_parameters:
+              "env": "${var.env}"
+              "schema_bronze": "${var.schema_bronze}"
+              "schema_silver": "${var.schema_silver}"
+              "schema_gold": "${var.schema_gold}"
+        - task_key: run_pipeline
+          pipeline_task: 
+            pipeline_id: ${resources.pipelines.sdp_ecommerce_pipeline.id}
+          depends_on:
+            - task_key: setup
