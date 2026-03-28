@@ -13,6 +13,9 @@ variables:
   schema_gold:
     description: "gold layer schema"
     default: "gold"
+  schema_quarantine:
+    description: "bad data schema"
+    default: "quarantine"
 
 targets:
   dev:
