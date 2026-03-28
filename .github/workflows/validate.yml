@@ -12,6 +12,7 @@ jobs:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
           DATABRICKS_CONFIG_FILE: /dev/null
+          DATABRICKS_CONFIG_PROFILE: ""
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:
