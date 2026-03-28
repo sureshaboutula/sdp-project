@@ -18,6 +18,11 @@ jobs:
 
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@main
+      
+      - name: Debug auth
+        run: |
+          echo "Host is set: ${{ secrets.DATABRICKS_HOST != '' }}"
+          databricks auth env
 
       - name: Validate bundle
         run: databricks bundle validate
