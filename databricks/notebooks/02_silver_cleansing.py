@@ -1,0 +1,48 @@
+# Databricks notebook source
+
+import dlt
+from pyspark.sql import functions as F
+
+env = spark.conf.get("env")
+schema_bronze = spark.conf.get("schema_bronze")
+schema_silver = spark.conf.get("schema_silver")
+schema_gold = spark.conf.get("schema_gold")
+
+@dlt.table(
+    name= f"sdp_catalog_{env}.{schema_silver}.yellow_taxi_clean",
+    comment = "read taxi bronze data into silver layer and clean it",
+    table_properties = {
+        "quality" : "silver",
+        "delta.autoOptimize.optimizeWrite": "true"
+    }
+)
+@dlt.expect_or_drop("valid_fare_amount", "fare_amount > 0")
+def yellow_taxi_data_clean():
+    return(
+        dlt.read(f"sdp_catalog_{env}.{schema_bronze}.yellow_taxi_raw").dropDuplicates(["vendor_id", "pickup_datetime", "dropoff_datetime"]) \
+            .withColumn("fare_amount",F.col("fare_amount").cast("double")) \
+            .withColumn("trip_distance",F.col("trip_distance").cast("double")) \
+            .withColumn("total_amount",F.col("total_amount").cast("double")) \
+            .withColumn("pickup_datetime",F.col("pickup_datetime").cast("timestamp")) \
+            .withColumn("dropoff_datetime",F.col("dropoff_datetime").cast("timestamp")) \
+            .withColumn("trip_year",F.year(F.col("pickup_datetime"))) \
+            .withColumn("trip_month",F.month(F.col("pickup_datetime")))\
+            .withColumn("trip_hour",F.hour(F.col("pickup_datetime")))
+
+    )
+
+@dlt.table(
+    name= f"sdp_catalog_{env}.{schema_silver}.orders_clean",
+    comment = "read orders bronze data into silver layer and clean it",
+    table_properties = {
+        "quality" : "silver",
+        "delta.autoOptimize.optimizeWrite": "true"
+    }
+)
+
+@dlt.expect_or_drop("cust_key_not_null", "o_custkey is not null")
+def clean_orders_data():
+    return (
+        dlt.read(f"sdp_catalog_{env}.{schema_bronze}.orders_raw").withColumn("order_year", F.year(F.col("o_orderdate"))) \
+        .withColumn("order_month", F.month(F.col("o_orderdate"))) \
+    )

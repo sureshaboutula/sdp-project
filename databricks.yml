@@ -1,0 +1,34 @@
+bundle:
+  name: sdp-etl-pipeline
+
+variables:
+  env:
+    description: "Deployment environment (dev or prod)"
+  schema_bronze:
+    description: "bronze layer schema"
+    default: "bronze"
+  schema_silver:
+    description: "silver layer schema"
+    default: "silver"
+  schema_gold:
+    description: "gold layer schema"
+    default: "gold"
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://dbc-33e91880-22fa.cloud.databricks.com/
+      profile: sdp-dev
+    variables:
+      env: dev
+  prod:
+    mode: production
+    workspace:
+      host: https://dbc-e9ad63fc-e4ad.cloud.databricks.com/
+    variables:
+      env: prod
+  
+include:
+  - databricks/resources/*.yml
