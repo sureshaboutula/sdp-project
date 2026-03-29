@@ -18,3 +18,8 @@ def create_schema(env, schema_name):
 schema_names = [schema_bronze, schema_silver, schema_gold, schema_quarantine]
 for schema in schema_names:
     create_schema(env, schema)
+
+def create_volume(env, schema):
+    spark.sql(f"CREATE VOLUME IF NOT EXISTS sdp_catalog_{env}.{schema}.schema_store")
+
+create_volume(env=env, schema=schema_bronze)
