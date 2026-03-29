@@ -28,6 +28,7 @@ jobs:
     env:
       DATABRICKS_HOST: ${{ secrets.DATABRICKS_PROD_HOST }}
       DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_PROD_TOKEN }}
+
     runs-on: ubuntu-latest
     environment: prod 
     if: github.event_name == 'workflow_dispatch'
