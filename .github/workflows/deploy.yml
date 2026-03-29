@@ -21,9 +21,6 @@ jobs:
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@main
 
-      - name: Create Catalog
-        run: databricks sql execute --statement "CREATE CATALOG IF NOT EXISTS sdp_catalog_$ENV_NAME"
-
       - name: Deploy to dev
         run: databricks bundle deploy -t dev
   
@@ -41,9 +38,6 @@ jobs:
 
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@main
-
-      - name: Create Catalog
-        run: databricks sql execute --statement "CREATE CATALOG IF NOT EXISTS sdp_catalog_$ENV_NAME"
 
       - name: Deploy to prod
         run: databricks bundle deploy -t prod
