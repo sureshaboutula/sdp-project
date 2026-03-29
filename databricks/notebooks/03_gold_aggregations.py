@@ -19,10 +19,10 @@ schema_gold = spark.conf.get("schema_gold")
 def vendor_monthly_trips_agg():
     return (
         dlt.read(f"sdp_catalog_{env}.{schema_silver}.yellow_taxi_clean") \
-        .groupBy("vendor_id", "trip_year", "trip_month").agg(
+        .groupBy("VendorID", "trip_year", "trip_month").agg(
             F.count("*").alias("total_rides"), 
             F.sum("total_amount").alias("total_revenue")
-        ).select("vendor_id", "trip_year", "trip_month", "total_rides", "total_revenue")
+        ).select("VendorID", "trip_year", "trip_month", "total_rides", "total_revenue")
     )
 
 @dlt.table(
