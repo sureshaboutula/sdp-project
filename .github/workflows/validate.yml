@@ -1,0 +1,28 @@
+name: sdp-project-ci-cd
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    name: validate bundle
+    env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Databricks CLI
+        uses: databricks/setup-cli@main
+      - name: Create empty databricks config
+        run: touch ~/.databrickscfg
+      - name: Validate bundle
+        run: databricks bundle validate -t dev --debug
+
+
+
+
