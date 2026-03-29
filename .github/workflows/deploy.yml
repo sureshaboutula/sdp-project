@@ -9,6 +9,10 @@ on:
 jobs:
   deploy-dev:
     name: Deploy to DEV
+    env:
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      ENV_NAME: dev
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
@@ -17,14 +21,18 @@ jobs:
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@main
 
+      - name: Create Catalog
+        run: databricks sql execute --statement "CREATE CATALOG IF NOT EXISTS sdp_catalog_$ENV_NAME"
+
       - name: Deploy to dev
-        env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
         run: databricks bundle deploy -t dev
   
   deploy-prod:
     name: Deploy to Prod
+    env:
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_PROD_HOST }}
+      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_PROD_TOKEN }}
+      ENV_NAME: prod
     runs-on: ubuntu-latest
     environment: prod 
     if: github.event_name == 'workflow_dispatch'
@@ -34,8 +42,8 @@ jobs:
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@main
 
+      - name: Create Catalog
+        run: databricks sql execute --statement "CREATE CATALOG IF NOT EXISTS sdp_catalog_$ENV_NAME"
+
       - name: Deploy to prod
-        env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_PROD_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_PROD_TOKEN }}
         run: databricks bundle deploy -t prod
