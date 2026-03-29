@@ -17,6 +17,7 @@ schema_gold = spark.conf.get("schema_gold")
     }
 )
 @dlt.expect_or_drop("valid_fare_amount", "fare_amount > 0")
+@dlt.expect_or_drop("vendor_id_not_null", "VendorID is not null")
 def yellow_taxi_data_clean():
     return(
         dlt.read(f"sdp_catalog_{env}.{schema_bronze}.yellow_taxi_raw").dropDuplicates(["VendorID", "tpep_pickup_datetime", "tpep_dropoff_datetime"]) \
