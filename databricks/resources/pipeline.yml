@@ -32,6 +32,7 @@ resources:
               "schema_bronze": "${var.schema_bronze}"
               "schema_silver": "${var.schema_silver}"
               "schema_gold": "${var.schema_gold}"
+              "schema_quarantine": "${var.schema_quarantine}"
         - task_key: run_pipeline
           pipeline_task: 
             pipeline_id: ${resources.pipelines.sdp_ecommerce_pipeline.id}
