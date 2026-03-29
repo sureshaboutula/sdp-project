@@ -12,7 +12,6 @@ jobs:
     env:
       DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
       DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-      ENV_NAME: dev
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
@@ -29,7 +28,7 @@ jobs:
     env:
       DATABRICKS_HOST: ${{ secrets.DATABRICKS_PROD_HOST }}
       DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_PROD_TOKEN }}
-      ENV_NAME: prod
+
     runs-on: ubuntu-latest
     environment: prod 
     if: github.event_name == 'workflow_dispatch'
