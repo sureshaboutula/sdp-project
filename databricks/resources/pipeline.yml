@@ -38,3 +38,13 @@ resources:
             pipeline_id: ${resources.pipelines.sdp_ecommerce_pipeline.id}
           depends_on:
             - task_key: setup
+        - task_key: optimize
+          notebook_task:
+            notebook_path: ../notebooks/05_optimize.ipynb
+            base_parameters:
+              "env": "${var.env}"
+              "schema_bronze": "${var.schema_bronze}"
+              "schema_silver": "${var.schema_silver}"
+              "schema_gold": "${var.schema_gold}"
+          depends_on: 
+                - task_key: run_pipeline
