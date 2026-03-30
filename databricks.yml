@@ -13,6 +13,9 @@ variables:
   schema_gold:
     description: "gold layer schema"
     default: "gold"
+  schema_quarantine:
+    description: "bad data schema"
+    default: "quarantine"
 
 targets:
   dev:
@@ -20,7 +23,7 @@ targets:
     default: true
     workspace:
       host: https://dbc-33e91880-22fa.cloud.databricks.com/
-      profile: sdp-dev
+      #profile: sdp-dev
     variables:
       env: dev
   prod:
