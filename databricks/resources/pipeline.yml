@@ -40,7 +40,7 @@ resources:
             - task_key: setup
         - task_key: optimize
           notebook_task:
-            notebook_path: ../notebooks/05_optimize.ipynb
+            notebook_path: ../notebooks/05_optimize.py
             base_parameters:
               "env": "${var.env}"
               "schema_bronze": "${var.schema_bronze}"
