@@ -33,6 +33,10 @@ def yellow_taxi_data_clean():
     df = dlt.read(f"sdp_catalog_{env}.{schema_bronze}.yellow_taxi_raw")
     return transform_taxi_data(df)  
 
+def transform_orders_data(df):
+    return df.withColumn("order_year", F.year(F.col("o_orderdate"))) \
+        .withColumn("order_month", F.month(F.col("o_orderdate")))
+
 @dlt.table(
     name= f"sdp_catalog_{env}.{schema_silver}.orders_clean",
     comment = "read orders bronze data into silver layer and clean it",
@@ -44,7 +48,5 @@ def yellow_taxi_data_clean():
 
 @dlt.expect_or_drop("cust_key_not_null", "o_custkey is not null")
 def clean_orders_data():
-    return (
-        dlt.read(f"sdp_catalog_{env}.{schema_bronze}.orders_raw").withColumn("order_year", F.year(F.col("o_orderdate"))) \
-        .withColumn("order_month", F.month(F.col("o_orderdate"))) \
-    )
+    df = dlt.read(f"sdp_catalog_{env}.{schema_bronze}.orders_raw")
+    return transform_orders_data(df)
