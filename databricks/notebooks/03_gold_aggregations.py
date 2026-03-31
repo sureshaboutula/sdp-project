@@ -2,17 +2,18 @@
 
 import dlt
 from pyspark.sql import functions as F
+from utils.transformations import aggregate_vendor_monthly_trips, aggregate_customers_orders
 
 env = spark.conf.get("env")
 schema_bronze = spark.conf.get("schema_bronze")
 schema_silver = spark.conf.get("schema_silver")
 schema_gold = spark.conf.get("schema_gold")
 
-def aggregate_vendor_monthly_trips(df):
-    df.groupBy("VendorID", "trip_year", "trip_month").agg(
-            F.count("*").alias("total_rides"), 
-            F.sum("total_amount").alias("total_revenue")
-        ).select("VendorID", "trip_year", "trip_month", "total_rides", "total_revenue")
+# def aggregate_vendor_monthly_trips(df):
+#     return df.groupBy("VendorID", "trip_year", "trip_month").agg(
+#             F.count("*").alias("total_rides"), 
+#             F.sum("total_amount").alias("total_revenue")
+#         ).select("VendorID", "trip_year", "trip_month", "total_rides", "total_revenue")
 
 @dlt.table(
     name = f"sdp_catalog_{env}.{schema_gold}.vendors_monthly_trips_revenue",
@@ -26,11 +27,11 @@ def vendor_monthly_trips_agg():
     df = dlt.read(f"sdp_catalog_{env}.{schema_silver}.yellow_taxi_clean")
     return aggregate_vendor_monthly_trips(df)
 
-def aggregate_customers_orders(df):
-    df.groupBy("o_custkey").agg(
-            F.count("o_orderkey").alias("total_orders"),
-            F.sum("o_totalprice").alias("total_spend")
-        ).select("o_custkey", "total_orders", "total_spend")
+# def aggregate_customers_orders(df):
+#     return df.groupBy("o_custkey").agg(
+#             F.count("o_orderkey").alias("total_orders"),
+#             F.sum("o_totalprice").alias("total_spend")
+#         ).select("o_custkey", "total_orders", "total_spend")
 
 @dlt.table(
     name = f"sdp_catalog_{env}.{schema_gold}.customers_order_summary",
