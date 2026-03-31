@@ -2,22 +2,23 @@
 
 import dlt
 from pyspark.sql import functions as F
+from utils.transformations import transform_orders_data, transform_taxi_data
 
 env = spark.conf.get("env")
 schema_bronze = spark.conf.get("schema_bronze")
 schema_silver = spark.conf.get("schema_silver")
 schema_gold = spark.conf.get("schema_gold")
 
-def transform_taxi_data(df):
-    return df.dropDuplicates(["VendorID", "tpep_pickup_datetime", "tpep_dropoff_datetime"]) \
-            .withColumn("fare_amount",F.col("fare_amount").cast("double")) \
-            .withColumn("trip_distance",F.col("trip_distance").cast("double")) \
-            .withColumn("total_amount",F.col("total_amount").cast("double")) \
-            .withColumn("pickup_datetime",F.col("tpep_pickup_datetime").cast("timestamp")) \
-            .withColumn("dropoff_datetime",F.col("tpep_dropoff_datetime").cast("timestamp")) \
-            .withColumn("trip_year",F.year(F.col("tpep_pickup_datetime"))) \
-            .withColumn("trip_month",F.month(F.col("tpep_pickup_datetime")))\
-            .withColumn("trip_hour",F.hour(F.col("tpep_pickup_datetime")))
+# def transform_taxi_data(df):
+#     return df.dropDuplicates(["VendorID", "tpep_pickup_datetime", "tpep_dropoff_datetime"]) \
+#             .withColumn("fare_amount",F.col("fare_amount").cast("double")) \
+#             .withColumn("trip_distance",F.col("trip_distance").cast("double")) \
+#             .withColumn("total_amount",F.col("total_amount").cast("double")) \
+#             .withColumn("pickup_datetime",F.col("tpep_pickup_datetime").cast("timestamp")) \
+#             .withColumn("dropoff_datetime",F.col("tpep_dropoff_datetime").cast("timestamp")) \
+#             .withColumn("trip_year",F.year(F.col("tpep_pickup_datetime"))) \
+#             .withColumn("trip_month",F.month(F.col("tpep_pickup_datetime")))\
+#             .withColumn("trip_hour",F.hour(F.col("tpep_pickup_datetime")))
 
 @dlt.table(
     name= f"sdp_catalog_{env}.{schema_silver}.yellow_taxi_clean",
@@ -33,9 +34,9 @@ def yellow_taxi_data_clean():
     df = dlt.read(f"sdp_catalog_{env}.{schema_bronze}.yellow_taxi_raw")
     return transform_taxi_data(df)  
 
-def transform_orders_data(df):
-    return df.withColumn("order_year", F.year(F.col("o_orderdate"))) \
-        .withColumn("order_month", F.month(F.col("o_orderdate")))
+# def transform_orders_data(df):
+#     return df.withColumn("order_year", F.year(F.col("o_orderdate"))) \
+#         .withColumn("order_month", F.month(F.col("o_orderdate")))
 
 @dlt.table(
     name= f"sdp_catalog_{env}.{schema_silver}.orders_clean",
