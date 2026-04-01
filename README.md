@@ -365,7 +365,7 @@ Add these secrets in GitHub → Settings → Secrets and variables → Actions:
 
 Built by **Suresh Aboutula**
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue)](www.linkedin.com/in/suresh-aboutula-686136a6)
+[![LinkedIn](www.linkedin.com/in/suresh-aboutula-686136a6)
 [![GitHub](https://img.shields.io/badge/GitHub-Follow-black)](https://github.com/sureshaboutula)
 
 ---
