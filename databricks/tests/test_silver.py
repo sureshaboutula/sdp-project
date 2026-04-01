@@ -16,14 +16,14 @@ data = [
 ]
 #df = spark.createDataFrame(data)
 
-def test_derived_columns_exist():
+def test_derived_columns_exist(spark):
     df = spark.createDataFrame(data)
     result_df = transform_taxi_data(df)
     assert "trip_year" in result_df.columns
     assert "trip_month" in result_df.columns
     assert "trip_hour" in result_df.columns
 
-def test_column_data_types():
+def test_column_data_types(spark):
     df = spark.createDataFrame(data)
     result_df = transform_taxi_data(df)
     schema_dict = dict(result_df.dtypes)
@@ -33,7 +33,7 @@ def test_column_data_types():
     assert schema_dict["pickup_datetime"] == "timestamp", "pickup_datetime should be timestamp"
     assert schema_dict["dropoff_datetime"] == "timestamp", "dropoff_datetime should be timestamp"
 
-def test_deduplication():
+def test_deduplication(spark):
     df = spark.createDataFrame(data)
     result_df = transform_taxi_data(df)
     assert result_df.count() == 4

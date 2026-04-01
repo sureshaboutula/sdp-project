@@ -16,7 +16,7 @@ data = [
         fare_amount=13.0, trip_distance=2.51, total_amount=16.56)
 ]
 
-def test_columns_exist():
+def test_columns_exist(spark):
     df = spark.createDataFrame(data)
     transformed_df = transform_taxi_data(df)
     aggregation_df = aggregate_vendor_monthly_trips(transformed_df)
@@ -24,13 +24,13 @@ def test_columns_exist():
     for column in columns:
         assert column in aggregation_df.columns, f"{column} is missing in aggregation table"
 
-def test_aggregated_rows_count():
+def test_aggregated_rows_count(spark):
     df = spark.createDataFrame(data)
     transformed_df = transform_taxi_data(df)
     aggregation_df = aggregate_vendor_monthly_trips(transformed_df)
     assert aggregation_df.count() == 4, "aggregated rows count is wrong"
 
-def test_aggregated_values():
+def test_aggregated_values(spark):
     df = spark.createDataFrame(data)
     transformed_df = transform_taxi_data(df)
     aggregation_df = aggregate_vendor_monthly_trips(transformed_df)
