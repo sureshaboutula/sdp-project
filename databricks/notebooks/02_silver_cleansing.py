@@ -1,11 +1,12 @@
 # Databricks notebook source
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import dlt
 from pyspark.sql import functions as F
 from utils.transformations import transform_orders_data, transform_taxi_data
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 
 env = spark.conf.get("env")
 schema_bronze = spark.conf.get("schema_bronze")

@@ -1,11 +1,13 @@
 # Databricks notebook source
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 
 import dlt
 from pyspark.sql import functions as F
 from utils.transformations import aggregate_vendor_monthly_trips, aggregate_customers_orders
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 
 env = spark.conf.get("env")
 schema_bronze = spark.conf.get("schema_bronze")
