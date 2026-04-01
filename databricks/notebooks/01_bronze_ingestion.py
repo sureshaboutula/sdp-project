@@ -18,14 +18,16 @@ schema_gold = spark.conf.get("schema_gold")
                         
 )
 @dlt.expect("fare_amount_positive", "fare_amount > 0")
-@dlt.expect("vendor_id_not_null", "vendor_id is not null")
+@dlt.expect("vendor_id_not_null", "VendorID is not null")
 def ingest_taxi_data_bronze():
-    source_path = "/databricks-datasets/nyctaxi/tripdata/yellow/"
+    #source_path = "/databricks-datasets/nyctaxi/tripdata/yellow/"
+    source_path = "dbfs:/databricks-datasets/nyctaxi/tripdata/yellow/yellow_tripdata_2016-*.csv.gz"
+    clean_columns = [F.col(c).alias(c.strip()) for c in spark.read.format("csv").option("header","true").load(source_path).columns]
     return (
         spark.readStream.format("cloudFiles") \
             .option("cloudFiles.format", "csv") \
-            .option("cloudFiles.schemaLocation", f"/Volumes/sdp_catalog_{env}/bronze/schema_store/yellow_taxi")
-            .load(source_path)
+            .option("cloudFiles.schemaLocation", f"/Volumes/sdp_catalog_{env}/bronze/schema_store/yellow_taxi") \
+            .load(source_path).select(clean_columns)
     )
 
 @dlt.table(
