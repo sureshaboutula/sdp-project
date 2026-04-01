@@ -1,7 +1,8 @@
 # Databricks notebook source
 import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+notebook_path = dbutils.notebook.entry_point.getDbutils().notebook().getContext().notebookPath().get()
+base_path = '/Workspace' + '/'.join(notebook_path.split('/')[:-2])
+sys.path.append(base_path)
 
 
 import dlt
