@@ -70,6 +70,12 @@ jobs:
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@main
 
+      - name: Get Pipeline ID
+        run: |
+          PIPELINE_ID=$(databricks bundle summary -t prod --output json | python3 -c "import sys,json; print(json.load(sys.stdin)['resources']['pipelines']['sdp_ecommerce_pipeline']['id'])")
+          echo "pipeline_id=$PIPELINE_ID" >> $GITHUB_OUTPUT
+        id: get_pipeline
+
       - name: Run ETL Pipeline
-        run: databricks bundle run sdp_ecommerce_job -t prod
+        run: databricks pipelines start --full-refresh-all --pipeline-id ${{ steps.get_pipeline.outputs.pipeline_id }} --no-wait
   
