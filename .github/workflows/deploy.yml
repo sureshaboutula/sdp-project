@@ -75,8 +75,8 @@ jobs:
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@main
 
-      - name: Debug Auth
-        run: databricks auth describe
+      - name: Create empty databricks config
+        run: touch ~/.databrickscfg
 
       - name: Run ETL Pipeline
         run: databricks pipelines start-update ${{ secrets.DATABRICKS_PROD_PIPELINE_ID }} --full-refresh
