@@ -70,5 +70,9 @@ jobs:
       - name: Check auth
         run: databricks auth describe
       - name: Run ETL Pipeline
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_PROD_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_PROD_TOKEN }}
+          DATABRICKS_CONFIG_FILE: /dev/null
         run: databricks pipelines start-update ${{ secrets.DATABRICKS_PROD_PIPELINE_ID }} --full-refresh
   
