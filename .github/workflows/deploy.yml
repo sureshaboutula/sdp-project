@@ -76,6 +76,9 @@ jobs:
           echo "pipeline_id=$PIPELINE_ID" >> $GITHUB_OUTPUT
         id: get_pipeline
 
+      - name: Debug Pipeline ID
+        run: echo "Pipeline ID is ${{ steps.get_pipeline.outputs.pipeline_id }}"
+
       - name: Run ETL Pipeline
-        run: databricks pipelines start-update $PIPELINE_ID --full-refresh
+        run: databricks pipelines start-update ${{ steps.get_pipeline.outputs.pipeline_id }} --full-refresh
   
