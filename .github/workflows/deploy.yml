@@ -77,5 +77,5 @@ jobs:
         id: get_pipeline
 
       - name: Run ETL Pipeline
-        run: databricks pipelines start --full-refresh-all --pipeline-id ${{ steps.get_pipeline.outputs.pipeline_id }} --no-wait
+        run: databricks pipelines start-update $PIPELINE_ID --full-refresh
   
