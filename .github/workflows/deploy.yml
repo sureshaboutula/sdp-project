@@ -70,6 +70,9 @@ jobs:
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@main
 
+      - name: Debug Auth
+        run: databricks auth describe
+
       - name: Get Pipeline ID
         run: |
           PIPELINE_ID=$(databricks pipelines list-pipelines --output json | python3 -c "
