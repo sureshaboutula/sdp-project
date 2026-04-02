@@ -72,7 +72,12 @@ jobs:
 
       - name: Get Pipeline ID
         run: |
-          PIPELINE_ID=$(databricks bundle summary -t prod --output json | python3 -c "import sys,json; print(json.load(sys.stdin)['resources']['pipelines']['sdp_ecommerce_pipeline']['id'])")
+          PIPELINE_ID=$(databricks pipelines list-pipelines --output json | python3 -c "
+          import sys, json
+          pipelines = json.load(sys.stdin)
+          pipeline = next(p for p in pipelines.get('statuses', []) if 'sdp-project-prod' in p.get('name', ''))
+          print(pipeline['pipeline_id'])
+          ")
           echo "pipeline_id=$PIPELINE_ID" >> $GITHUB_OUTPUT
         id: get_pipeline
 
