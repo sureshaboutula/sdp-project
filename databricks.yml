@@ -23,9 +23,10 @@ targets:
     default: true
     workspace:
       host: https://dbc-33e91880-22fa.cloud.databricks.com/
-      #profile: sdp-dev
+      #profile: sdp-dev # uncomment for local development
     variables:
       env: dev
+      ENV_NAME: dev
   prod:
     mode: production
     workspace:
